@@ -31,8 +31,8 @@ Follow these quick commands to install, link, and spin up the code sandbox on yo
 
 ### 1. Clone the Codebase
 ```bash
-git clone https://github.com
-cd YOUR_REPO_NAME
+git clone https://github.com/linhtetaung-mm/find-paths-puzzle.git
+cd find-paths-puzzle
 ```
 
 ### 2. Install Project Modules
