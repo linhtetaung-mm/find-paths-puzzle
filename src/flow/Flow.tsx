@@ -3,9 +3,13 @@
 import { useState, useEffect, useRef } from 'react';
 import FlowGame from './FlowGame';
 import FlowEditor from './FlowEditor';
+import ReactMarkdown from 'react-markdown';
+import flowRulesMarkdown from './technical_analysis.md?raw';
 
 const Flow = () => {
   const [view, setView] = useState<'play' | 'solve'>('play');
+  const [isHelpOpen, setIsHelpOpen] = useState<boolean>(false);
+
   const [solverSize, setSolverSize] = useState<number>(5);
   
   // Engine & UI State
@@ -89,6 +93,14 @@ const Flow = () => {
         >
           AI Solver Lab
         </button>
+
+        {/* Floating Help / About Trigger Button */}
+        <button
+          onClick={() => setIsHelpOpen(true)}
+          className="w-full sm:w-auto px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white rounded-full font-bold text-[11px] sm:text-xs uppercase tracking-widest border border-slate-700 transition-all cursor-pointer flex items-center justify-center gap-1.5"
+        >
+          ❓ About Game
+        </button>
       </nav>
 
       {/* Added responsive padding wrapper to prevent edge clipping */}
@@ -159,8 +171,47 @@ const Flow = () => {
             />
           </div>
         </div>
-
       </main>
+      {/* 🧾 Persistent Dark UI Modal Layer */}
+      {isHelpOpen && (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-xs flex items-center justify-center p-4 z-50 animate-fade-in">
+          <div className="bg-slate-900 border border-slate-800 rounded-2xl max-w-xl w-full max-h-[85vh] flex flex-col shadow-2xl overflow-hidden">
+            
+            {/* Dark Mode Header */}
+            <div className="p-5 border-b border-slate-800 flex justify-between items-center bg-slate-900/50">
+              <h2 className="text-sm font-bold uppercase tracking-widest text-slate-200">Flow Puzzle Guidelines</h2>
+              <button 
+                onClick={() => setIsHelpOpen(false)}
+                className="text-slate-500 hover:text-slate-300 text-xl font-bold cursor-pointer transition-colors"
+              >
+                &times;
+              </button>
+            </div>
+
+            {/* Markdown Body Content Render Window */}
+            <div className="p-6 overflow-y-auto text-left bg-slate-950/40">
+              <article className="prose prose-invert prose-slate max-w-none text-sm text-slate-300 leading-relaxed
+                prose-headings:uppercase prose-headings:tracking-wider prose-headings:font-bold prose-headings:text-slate-200
+                prose-a:text-blue-400 hover:prose-a:text-blue-300
+                prose-strong:text-purple-400 prose-code:text-emerald-400 prose-code:bg-slate-800/50 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded">
+                <ReactMarkdown>{flowRulesMarkdown}</ReactMarkdown>
+              </article>
+            </div>
+
+            {/* Modal Footer Controls */}
+            <div className="p-4 border-t border-slate-800 bg-slate-900/60 text-right">
+              <button
+                onClick={() => setIsHelpOpen(false)}
+                className="bg-purple-600 hover:bg-purple-700 text-white px-5 py-2 text-xs font-bold uppercase tracking-widest rounded-xl transition-all cursor-pointer shadow-md shadow-purple-600/10"
+              >
+                Return to Mission
+              </button>
+            </div>
+
+          </div>
+        </div>
+      )}
+
     </div>
   );
 
