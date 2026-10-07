@@ -50,6 +50,26 @@ Open your preferred desktop or mobile browser viewport and steer it to the activ
 
 ---
 
+## Tests
+
+Run the automated checks once (also suitable for CI):
+
+```bash
+pnpm test
+```
+
+Run tests continuously while editing:
+
+```bash
+pnpm test:watch
+```
+
+The suite checks editor resizing and JSON imports, endpoint validation, game resets,
+and solver path validity. Game interaction tests use fixed boards so they do not
+rely on random puzzle generation.
+
+---
+
 ## 📦 Bundling & Deployment Execution
 
 To compile, minify, and compress your puzzle game workspace codebase into a highly-optimized static collection ready for free web hosting nodes (like GitHub Pages, Netlify, or Vercel), execute:

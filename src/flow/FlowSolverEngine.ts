@@ -60,7 +60,7 @@ export class VisualFlowSolver {
         // RULE #5: Every path must be longer than 2 squares
         if (currentPath.length < 2) continue; 
 
-        const originalVal = this.grid[next];
+        // const originalVal = this.grid[next];
         currentPath.push(next);
         
         // Try solving the next color

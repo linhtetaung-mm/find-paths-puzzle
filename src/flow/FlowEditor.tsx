@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { PATH_COLORS } from './colorMap';
 import { VisualFlowSolver } from './FlowSolverEngine';
 
@@ -14,15 +14,18 @@ interface FlowEditorProps {
 }
 
 const FlowEditor: React.FC<FlowEditorProps> = ({ size, onSizeChange, onSolve, solutionPaths, isSolving, onClearSolution }) => {
-  const [grid, setGrid] = useState<number[]>(new Array(size * size).fill(0));
+  const [editorBoard, setEditorBoard] = useState(() => ({
+    size,
+    grid: new Array<number>(size * size).fill(0),
+  }));
+  const { grid } = editorBoard;
   const [selectedNumber, setSelectedNumber] = useState<number>(1);
   const [isEraserMode, setIsEraserMode] = useState(false);
 
-  useEffect(() => {
-      if (grid.length !== size * size) {
-          setGrid(new Array(size * size).fill(0));
-      }
-  }, [size]);
+  // Reset before rendering a changed size; imported boards carry their own size.
+  if (editorBoard.size !== size) {
+    setEditorBoard({ size, grid: new Array<number>(size * size).fill(0) });
+  }
 
   const handleCellClick = (index: number) => {
     const newGrid = [...grid];
@@ -37,12 +40,12 @@ const FlowEditor: React.FC<FlowEditorProps> = ({ size, onSizeChange, onSolve, so
         return;
       }
     }
-    setGrid(newGrid);
+    setEditorBoard({ size, grid: newGrid });
     if (onClearSolution) onClearSolution(); 
   };
 
   const clearBoard = () => {
-    setGrid(new Array(size * size).fill(0));
+    setEditorBoard({ size, grid: new Array<number>(size * size).fill(0) });
     if (onClearSolution) onClearSolution();
   };
 
@@ -86,12 +89,12 @@ const FlowEditor: React.FC<FlowEditorProps> = ({ size, onSizeChange, onSolve, so
             const data = JSON.parse(event.target?.result as string);
             if (data.size && data.grid && data.solution) {
                 onSizeChange(data.size);
-                setGrid(data.grid);
+                setEditorBoard({ size: data.size, grid: data.grid });
                 if (onClearSolution) onClearSolution();
             } else {
                 alert("Invalid JSON format.");
             }
-        } catch (err) {
+        } catch {
             alert("Error parsing JSON file.");
         }
     };

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState } from 'react';
 import { FlowGenerator } from './FlowGenerator';
 import type { BoardConfig, DifficultyLevel } from './types';
 import { PATH_COLORS } from './colorMap';
@@ -9,23 +9,19 @@ interface CompletedPath { pairId: number; cells: number[]; }
 
 const FlowGame: React.FC = () => {
   const [level, setLevel] = useState<DifficultyLevel>(1);
-  const [board, setBoard] = useState<BoardConfig | null>(null);
+  const [board, setBoard] = useState<BoardConfig>(() => FlowGenerator.generateLevel(1));
   
   const [completedPaths, setCompletedPaths] = useState<CompletedPath[]>([]);
   const [activePairId, setActivePairId] = useState<number | null>(null);
   const [activePathCells, setActivePathCells] = useState<number[]>([]);
 
-  const startNewGame = useCallback((newLevel: DifficultyLevel) => {
+  const startNewGame = (newLevel: DifficultyLevel) => {
     const config = FlowGenerator.generateLevel(newLevel);
     setBoard(config);
     setCompletedPaths([]);
     setActivePairId(null);
     setActivePathCells([]);
-  }, []);
-
-  useEffect(() => {
-    startNewGame(level);
-  }, [level, startNewGame]);
+  };
 
 
   const handlePointerDown = (index: number, cellValue: number) => {
@@ -36,7 +32,7 @@ const FlowGame: React.FC = () => {
   };
 
   const handlePointerEnter = (index: number) => {
-    if (activePairId === null || !board) return;
+    if (activePairId === null) return;
     const lastIndex = activePathCells[activePathCells.length - 1];
     const rowDiff = Math.abs(Math.floor(index / board.size) - Math.floor(lastIndex / board.size));
     const colDiff = Math.abs((index % board.size) - (lastIndex % board.size));
@@ -76,14 +72,11 @@ const FlowGame: React.FC = () => {
     setActivePathCells([]);
   };
 
-  if (!board) return <div className="text-white text-center mt-20 font-mono">Initializing Matrix...</div>;
-
   const isBoardFull = () => {
-    if (!board) return false;
     const occupiedCount = completedPaths.reduce((acc, p) => acc + p.cells.length, 0);
     return occupiedCount === board.size * board.size;
   };
-  const isLevelComplete = completedPaths.length === board?.pairs && isBoardFull();
+  const isLevelComplete = completedPaths.length === board.pairs && isBoardFull();
 
   return (
     <div className="bg-slate-950 flex flex-col items-center justify-center p-4 font-mono select-none" onPointerUp={handlePointerUp} onPointerLeave={handlePointerUp}>
