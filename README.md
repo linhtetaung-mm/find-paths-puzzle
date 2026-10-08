@@ -8,8 +8,8 @@ Built using modern web standards: **React**, **TypeScript**, **Tailwind CSS v4**
 
 ## 🚀 Architectural & Design Features
 
-*   **🎮 Mission Mode (`FlowGame`)**: Play through handcrafted level configurations across multiple layout formats.
-*   **🤖 AI Solver Lab (`FlowEditor`)**: An interactive matrix editor panel where you can sketch, input custom layout blocks, and witness an automated solver unravel solutions in real-time.
+*   **🎮 Play (`FlowGame`)**: Play through handcrafted level configurations across multiple layout formats.
+*   **🤖 Solver studio (`FlowEditor`)**: An interactive matrix editor panel where you can sketch, input custom layout blocks, and witness an automated solver unravel solutions in real-time.
 *   **⚡ Web Worker Integration (`flowsolver.worker.ts`)**: Heavy algorithmic pathfinding computations run isolated inside a background browser thread (`type: 'module'`). This prevents UI freeze-ups and maintains 60 FPS layout fluidity even on large matrices.
 *   **📱 Universal Touch Optimization**: Engineered for fluid responsive scaling. Features horizontal swipe-snapping size panels, mobile-optimized metric components, and custom gesture overrides to separate game dragging from page scrolling.
 *   **💾 State-Preserving Tab Layout**: Employs smart styling toggles (`hidden`) instead of component unmounting. Users can jump back and forth between an active game session and the solver studio without losing structural state data, puzzle drawings, or compute statistics.
@@ -65,8 +65,19 @@ pnpm test:watch
 ```
 
 The suite checks editor resizing and JSON imports, endpoint validation, game resets,
-and solver path validity. Game interaction tests use fixed boards so they do not
+solver path validity, and touch dragging (including cancellation, fast swipes,
+backtracking, and multiple fingers). Game interaction tests use fixed boards so they do not
 rely on random puzzle generation.
+
+---
+
+## Mobile play
+
+Hold a numbered endpoint and drag to its match. The board uses captured pointer
+movement for touch, mouse, and pen; straight swipes fill intermediate cells.
+Slide backward to undo, or start from a connected endpoint to redraw its path.
+Only the puzzle board prevents touch scrolling; controls and the rest of the page
+scroll normally. Grid choices scroll horizontally on narrow screens.
 
 ---
 

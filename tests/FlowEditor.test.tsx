@@ -85,6 +85,19 @@ describe('FlowEditor', () => {
     expect(props.onSolve).not.toHaveBeenCalled();
   });
 
+  it('locks editing, imports, and solving while the solver is busy', () => {
+    const props = makeProps();
+    const { container } = render(<FlowEditor {...props} isSolving />);
+    const cell = getCells(container)[0] as HTMLButtonElement;
+    fireEvent.click(cell);
+    expect(cell.disabled).toBe(true);
+    expect(cell.textContent).toBe('');
+    expect((screen.getByRole('button', { name: 'Execute AI Solver' }) as HTMLButtonElement).disabled).toBe(true);
+    expect((screen.getByLabelText('Import JSON') as HTMLInputElement).disabled).toBe(true);
+    expect(props.onSolve).not.toHaveBeenCalled();
+    expect(props.onClearSolution).not.toHaveBeenCalled();
+  });
+
   it('clears both the board and the displayed solution', () => {
     const props = makeProps();
     const { container } = render(<FlowEditor {...props} />);
